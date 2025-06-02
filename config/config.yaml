@@ -1,7 +1,7 @@
 server:
-  port: "${PDKS_SERVER_PORT}"
+  port: ""
 database:
-  uri: "${PDKS_DATABASE_CONNECTION_STRING}"
+  uri: ""
 
 
 
