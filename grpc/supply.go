@@ -2,9 +2,9 @@ package grpc
 
 import (
 	"context"
-	"github.com/igntnk/stocky_sms/models"
-	"github.com/igntnk/stocky_sms/proto/pb"
-	"github.com/igntnk/stocky_sms/service"
+	"github.com/igntnk/stocky-sms/models"
+	"github.com/igntnk/stocky-sms/proto/pb"
+	"github.com/igntnk/stocky-sms/service"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"

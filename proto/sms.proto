@@ -4,7 +4,7 @@ import "google/protobuf/empty.proto";
 
 package uas;
 
-option go_package = "github.com/igntnk/stocky_sms/proto/pb";
+option go_package = "github.com/igntnk/stocky-sms/proto/pb";
 
 service ProductService {
   rpc CreateProduct(CreateProductMessage) returns (UuidResponse);

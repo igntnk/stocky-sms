@@ -1,4 +1,4 @@
-module github.com/igntnk/stocky_sms
+module github.com/igntnk/stocky-sms
 
 go 1.23.4
 

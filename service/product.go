@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
-	"github.com/igntnk/stocky_sms/models"
-	"github.com/igntnk/stocky_sms/repository"
+	"github.com/igntnk/stocky-sms/models"
+	"github.com/igntnk/stocky-sms/repository"
 	"github.com/rs/zerolog"
 )
 

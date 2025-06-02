@@ -2,10 +2,10 @@ package main
 
 import (
 	trmpgx "github.com/avito-tech/go-transaction-manager/pgxv5"
-	"github.com/igntnk/stocky_sms/config"
-	grpcapp "github.com/igntnk/stocky_sms/grpc"
-	"github.com/igntnk/stocky_sms/repository"
-	"github.com/igntnk/stocky_sms/service"
+	"github.com/igntnk/stocky-sms/config"
+	grpcapp "github.com/igntnk/stocky-sms/grpc"
+	"github.com/igntnk/stocky-sms/repository"
+	"github.com/igntnk/stocky-sms/service"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jackc/pgx/v5/stdlib"
 	"github.com/pressly/goose/v3"

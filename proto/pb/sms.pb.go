@@ -699,7 +699,7 @@ const file_sms_proto_rawDesc = "" +
 	"\fDeleteSupply\x12\x10.uas.UuidRequest\x1a\x11.uas.UuidResponse\x12C\n" +
 	"\x10UpdateSupplyInfo\x12\x1c.uas.UpdateSupplyInfoRequest\x1a\x11.uas.UuidResponse\x12K\n" +
 	"\x11GetActiveSupplies\x12\x16.google.protobuf.Empty\x1a\x1e.uas.GetActiveSuppliesResponse\x123\n" +
-	"\rGetSupplyById\x12\x10.uas.UuidRequest\x1a\x10.uas.SupplyModelB'Z%github.com/igntnk/stocky_sms/proto/pbb\x06proto3"
+	"\rGetSupplyById\x12\x10.uas.UuidRequest\x1a\x10.uas.SupplyModelB'Z%github.com/igntnk/stocky-sms/proto/pbb\x06proto3"
 
 var (
 	file_sms_proto_rawDescOnce sync.Once
