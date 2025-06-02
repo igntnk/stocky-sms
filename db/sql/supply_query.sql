@@ -9,3 +9,6 @@ select * from supply where status != 'done';
 
 -- name: GetSupplyById :one
 select * from supply where uuid = $1;
+
+-- name: CreateSupply :one
+insert into supply (comment, desired_date, responsible_user, edited_date, cost) values ($1, $2, $3, $4, $5) returning uuid;

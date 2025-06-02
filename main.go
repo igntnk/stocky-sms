@@ -1,11 +1,15 @@
 package main
 
 import (
+	trmpgx "github.com/avito-tech/go-transaction-manager/pgxv5"
 	"github.com/igntnk/stocky_sms/config"
-	"github.com/igntnk/stocky_sms/grpc"
-	"github.com/igntnk/stocky_sms/pkg/client"
-	"github.com/igntnk/stocky_sms/setup"
-	"go.mongodb.org/mongo-driver/mongo/description"
+	grpcapp "github.com/igntnk/stocky_sms/grpc"
+	"github.com/igntnk/stocky_sms/repository"
+	"github.com/igntnk/stocky_sms/service"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5/stdlib"
+	"github.com/pressly/goose/v3"
+	"google.golang.org/grpc"
 	"os/signal"
 	"syscall"
 
@@ -17,43 +21,55 @@ import (
 func main() {
 	logger := zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr}).With().Timestamp().Logger()
 
-	ctx := context.Background()
+	mainCtx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+	defer cancel()
 
 	cfg := config.Get(logger)
 
-	db, topology, err := client.NewClient(ctx, cfg.Database, logger)
+	dbConf, err := pgxpool.ParseConfig(cfg.Database.URI)
 	if err != nil {
-		logger.Fatal().Err(err).Msg("")
+		logger.Fatal().Err(err).Msg("failed to parse database config")
+		return
 	}
 
-	logger.Info().Msg("Connection is established. Mongo use topology: " + topology.String())
-
-	isReplicaSet := false
-	if topology.Kind()&description.ReplicaSet == description.ReplicaSet {
-		isReplicaSet = true
-	}
-
-	err = setup.SetupDefaultData(ctx, db)
+	pool, err := pgxpool.NewWithConfig(mainCtx, dbConf)
 	if err != nil {
-		logger.Fatal().Err(err).Msg("")
+		logger.Fatal().Err(err).Msg("failed to connect to database")
+		return
 	}
 
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
+	db := stdlib.OpenDBFromPool(pool)
 
-	err = setup.Init(ctx, db, isReplicaSet, logger, cfg)
+	err = goose.SetDialect("postgres")
 	if err != nil {
-		logger.Fatal().Err(err).Msg("")
+		logger.Fatal().Err(err).Msg("failed to set postgres dialect")
+		return
 	}
 
-	grpcServ := grpc.New(setup.GRPCServer(), cfg.Server.GrpcPort, logger)
+	err = goose.Up(db, "cmd/changelog")
+	if err != nil {
+		logger.Fatal().Err(err).Msg("failed to migrate database")
+		return
+	}
 
+	productRepo := repository.NewProductRepository(logger, pool, trmpgx.DefaultCtxGetter)
+	supplyRepo := repository.NewSupplyRepository(logger, pool, trmpgx.DefaultCtxGetter)
+
+	productService := service.NewProductService(logger, productRepo)
+	supplyService := service.NewSupplyService(logger, supplyRepo)
+
+	grpcServer := grpc.NewServer()
+	grpcapp.RegisterSupplyServer(grpcServer, logger, supplyService)
+	grpcapp.RegisterProductServer(grpcServer, logger, productService)
+
+	cookedGrpcServer := grpcapp.New(grpcServer, cfg.Server.Port, logger)
 	go func() {
-		grpcServ.MustRun()
+		cookedGrpcServer.MustRun()
 	}()
 
-	stop := make(chan os.Signal, 1)
-	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM)
-	<-stop
-	grpcServ.Stop()
+	select {
+	case <-mainCtx.Done():
+		logger.Info().Msg("shutting down")
+		cookedGrpcServer.Stop()
+	}
 }

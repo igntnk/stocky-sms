@@ -25,5 +25,10 @@ type Supply struct {
 
 type SupplyWithProducts struct {
 	Supply   `yaml:",inline" json:",inline"`
-	Products []Product `json:"products" yaml:"products"`
+	Products []SupplyProduct `json:"products" yaml:"products"`
+}
+
+type SupplyProduct struct {
+	Product `yaml:",inline" json:",inline" mapstructure:",squash"`
+	Amount  float64 `json:"amount" yaml:"amount"`
 }

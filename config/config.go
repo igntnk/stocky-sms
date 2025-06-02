@@ -3,33 +3,22 @@ package config
 import (
 	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"os"
 	"reflect"
 	"strings"
 )
 
 const (
-	EnvPrefix = "IIMS"
+	EnvPrefix = "SMS"
 )
 
 type Config struct {
-	Database DatabaseConfig
-	Server   struct {
-		Host           string `yaml:"host" mapstructure:"host"`
-		GrpcPort       int    `yaml:"grpc_port" mapstructure:"grpc_port"`
-		RequestTimeout int    `yaml:"request_timeout" mapstructure:"request_timeout"`
-		InsertDuration int    `yaml:"insert_duration" mapstructure:"insert_duration"`
-		PathToData     string `yaml:"path_to_data" mapstructure:"path_to_data"`
+	Database struct {
+		URI string `yaml:"uri" mapstructure:"uri"`
+	} `yaml:"database" mapstructure:"database"`
+	Server struct {
+		Port int `mapstructure:"port"`
 	} `yaml:"server" mapstructure:"server"`
-}
-
-type DatabaseConfig struct {
-	HealthcheckTimeout int    `yaml:"healthcheck_timeout" mapstructure:"healthcheck_timeout"`
-	Uri                string `yaml:"uri" mapstructure:"uri"`
-	Database           string `yaml:"database" mapstructure:"database"`
-	MigrationsPath     string `yaml:"migrations_path" mapstructure:"migrations_path"`
-	*options.ClientOptions
 }
 
 func Get(logger zerolog.Logger) *Config {

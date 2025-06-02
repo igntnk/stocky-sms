@@ -11,6 +11,31 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const createSupply = `-- name: CreateSupply :one
+insert into supply (comment, desired_date, responsible_user, edited_date, cost) values ($1, $2, $3, $4, $5) returning uuid
+`
+
+type CreateSupplyParams struct {
+	Comment         pgtype.Text
+	DesiredDate     pgtype.Timestamp
+	ResponsibleUser string
+	EditedDate      pgtype.Timestamp
+	Cost            pgtype.Numeric
+}
+
+func (q *Queries) CreateSupply(ctx context.Context, arg CreateSupplyParams) (pgtype.UUID, error) {
+	row := q.db.QueryRow(ctx, createSupply,
+		arg.Comment,
+		arg.DesiredDate,
+		arg.ResponsibleUser,
+		arg.EditedDate,
+		arg.Cost,
+	)
+	var uuid pgtype.UUID
+	err := row.Scan(&uuid)
+	return uuid, err
+}
+
 const deleteSupply = `-- name: DeleteSupply :one
 delete from supply where uuid = $1 returning uuid
 `
