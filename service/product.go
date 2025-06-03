@@ -8,7 +8,7 @@ import (
 )
 
 type ProductService interface {
-	Create(ctx context.Context, productCode string) (string, error)
+	Create(ctx context.Context, storeCost float64) (string, error)
 	Delete(ctx context.Context, uuid string) (string, error)
 	SetStoreCost(ctx context.Context, product models.Product) error
 	SetStoreAmount(ctx context.Context, product models.Product) error
@@ -27,8 +27,8 @@ type productService struct {
 	repo   repository.ProductRepository
 }
 
-func (p productService) Create(ctx context.Context, productCode string) (string, error) {
-	return p.repo.Create(ctx, productCode)
+func (p productService) Create(ctx context.Context, storeCost float64) (string, error) {
+	return p.repo.Create(ctx, storeCost)
 }
 
 func (p productService) Delete(ctx context.Context, uuid string) (string, error) {

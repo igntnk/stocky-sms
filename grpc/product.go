@@ -20,7 +20,7 @@ func RegisterProductServer(server *grpc.Server, logger zerolog.Logger, productSe
 }
 
 func (s *productServer) CreateProduct(ctx context.Context, req *pb.CreateProductMessage) (*pb.UuidResponse, error) {
-	res, err := s.ProductService.Create(ctx, req.ProductCode)
+	res, err := s.ProductService.Create(ctx, float64(req.StoreCost))
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func (s *productServer) SetStoreCost(ctx context.Context, req *pb.SetProductCost
 }
 
 func (s *productServer) SetStoreAmount(ctx context.Context, req *pb.SetProductAmountRequest) (*pb.UuidResponse, error) {
-	err := s.ProductService.SetStoreCost(ctx, models.Product{
+	err := s.ProductService.SetStoreAmount(ctx, models.Product{
 		Uuid:        req.Uuid,
 		StoreAmount: float64(req.StoreAmount),
 	})

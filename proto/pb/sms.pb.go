@@ -24,7 +24,7 @@ const (
 
 type CreateProductMessage struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ProductCode   string                 `protobuf:"bytes,1,opt,name=productCode,proto3" json:"productCode,omitempty"`
+	StoreCost     float32                `protobuf:"fixed32,1,opt,name=storeCost,proto3" json:"storeCost,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -59,11 +59,11 @@ func (*CreateProductMessage) Descriptor() ([]byte, []int) {
 	return file_sms_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *CreateProductMessage) GetProductCode() string {
+func (x *CreateProductMessage) GetStoreCost() float32 {
 	if x != nil {
-		return x.ProductCode
+		return x.StoreCost
 	}
-	return ""
+	return 0
 }
 
 type UuidResponse struct {
@@ -646,9 +646,9 @@ var File_sms_proto protoreflect.FileDescriptor
 
 const file_sms_proto_rawDesc = "" +
 	"\n" +
-	"\tsms.proto\x12\x03uas\x1a\x1bgoogle/protobuf/empty.proto\"8\n" +
-	"\x14CreateProductMessage\x12 \n" +
-	"\vproductCode\x18\x01 \x01(\tR\vproductCode\"\"\n" +
+	"\tsms.proto\x12\x03sms\x1a\x1bgoogle/protobuf/empty.proto\"4\n" +
+	"\x14CreateProductMessage\x12\x1c\n" +
+	"\tstoreCost\x18\x01 \x01(\x02R\tstoreCost\"\"\n" +
 	"\fUuidResponse\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\"!\n" +
 	"\vUuidRequest\x12\x12\n" +
@@ -671,7 +671,7 @@ const file_sms_proto_rawDesc = "" +
 	"\vdesiredDate\x18\x02 \x01(\tR\vdesiredDate\x12\x18\n" +
 	"\acomment\x18\x03 \x01(\tR\acomment\x12(\n" +
 	"\x0fresponsibleUser\x18\x04 \x01(\tR\x0fresponsibleUser\x123\n" +
-	"\bproducts\x18\x05 \x03(\v2\x17.uas.SupplyProductModelR\bproducts\"\xbf\x01\n" +
+	"\bproducts\x18\x05 \x03(\v2\x17.sms.SupplyProductModelR\bproducts\"\xbf\x01\n" +
 	"\x17UpdateSupplyInfoRequest\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x18\n" +
 	"\acomment\x18\x02 \x01(\tR\acomment\x12 \n" +
@@ -687,19 +687,19 @@ const file_sms_proto_rawDesc = "" +
 	"\x0fresponsibleUser\x18\x05 \x01(\tR\x0fresponsibleUser\x12\x12\n" +
 	"\x04cost\x18\x06 \x01(\x02R\x04cost\"I\n" +
 	"\x19GetActiveSuppliesResponse\x12,\n" +
-	"\bsupplies\x18\x01 \x03(\v2\x10.uas.SupplyModelR\bsupplies2\xc8\x02\n" +
+	"\bsupplies\x18\x01 \x03(\v2\x10.sms.SupplyModelR\bsupplies2\xc8\x02\n" +
 	"\x0eProductService\x12=\n" +
-	"\rCreateProduct\x12\x19.uas.CreateProductMessage\x1a\x11.uas.UuidResponse\x124\n" +
-	"\rDeleteProduct\x12\x10.uas.UuidRequest\x1a\x11.uas.UuidResponse\x12=\n" +
-	"\fSetStoreCost\x12\x1a.uas.SetProductCostRequest\x1a\x11.uas.UuidResponse\x12A\n" +
-	"\x0eSetStoreAmount\x12\x1c.uas.SetProductAmountRequest\x1a\x11.uas.UuidResponse\x12?\n" +
-	"\x0eGetStoreAmount\x12\x10.uas.UuidRequest\x1a\x1b.uas.GetStoreAmountResponse2\xc8\x02\n" +
+	"\rCreateProduct\x12\x19.sms.CreateProductMessage\x1a\x11.sms.UuidResponse\x124\n" +
+	"\rDeleteProduct\x12\x10.sms.UuidRequest\x1a\x11.sms.UuidResponse\x12=\n" +
+	"\fSetStoreCost\x12\x1a.sms.SetProductCostRequest\x1a\x11.sms.UuidResponse\x12A\n" +
+	"\x0eSetStoreAmount\x12\x1c.sms.SetProductAmountRequest\x1a\x11.sms.UuidResponse\x12?\n" +
+	"\x0eGetStoreAmount\x12\x10.sms.UuidRequest\x1a\x1b.sms.GetStoreAmountResponse2\xc8\x02\n" +
 	"\rSupplyService\x12;\n" +
-	"\fCreateSupply\x12\x18.uas.CreateSupplyRequest\x1a\x11.uas.UuidResponse\x123\n" +
-	"\fDeleteSupply\x12\x10.uas.UuidRequest\x1a\x11.uas.UuidResponse\x12C\n" +
-	"\x10UpdateSupplyInfo\x12\x1c.uas.UpdateSupplyInfoRequest\x1a\x11.uas.UuidResponse\x12K\n" +
-	"\x11GetActiveSupplies\x12\x16.google.protobuf.Empty\x1a\x1e.uas.GetActiveSuppliesResponse\x123\n" +
-	"\rGetSupplyById\x12\x10.uas.UuidRequest\x1a\x10.uas.SupplyModelB'Z%github.com/igntnk/stocky-sms/proto/pbb\x06proto3"
+	"\fCreateSupply\x12\x18.sms.CreateSupplyRequest\x1a\x11.sms.UuidResponse\x123\n" +
+	"\fDeleteSupply\x12\x10.sms.UuidRequest\x1a\x11.sms.UuidResponse\x12C\n" +
+	"\x10UpdateSupplyInfo\x12\x1c.sms.UpdateSupplyInfoRequest\x1a\x11.sms.UuidResponse\x12K\n" +
+	"\x11GetActiveSupplies\x12\x16.google.protobuf.Empty\x1a\x1e.sms.GetActiveSuppliesResponse\x123\n" +
+	"\rGetSupplyById\x12\x10.sms.UuidRequest\x1a\x10.sms.SupplyModelB'Z%github.com/igntnk/stocky-sms/proto/pbb\x06proto3"
 
 var (
 	file_sms_proto_rawDescOnce sync.Once
@@ -715,42 +715,42 @@ func file_sms_proto_rawDescGZIP() []byte {
 
 var file_sms_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_sms_proto_goTypes = []any{
-	(*CreateProductMessage)(nil),      // 0: uas.CreateProductMessage
-	(*UuidResponse)(nil),              // 1: uas.UuidResponse
-	(*UuidRequest)(nil),               // 2: uas.UuidRequest
-	(*SetProductCostRequest)(nil),     // 3: uas.SetProductCostRequest
-	(*SetProductAmountRequest)(nil),   // 4: uas.SetProductAmountRequest
-	(*GetStoreAmountResponse)(nil),    // 5: uas.GetStoreAmountResponse
-	(*SupplyProductModel)(nil),        // 6: uas.SupplyProductModel
-	(*CreateSupplyRequest)(nil),       // 7: uas.CreateSupplyRequest
-	(*UpdateSupplyInfoRequest)(nil),   // 8: uas.UpdateSupplyInfoRequest
-	(*SupplyModel)(nil),               // 9: uas.SupplyModel
-	(*GetActiveSuppliesResponse)(nil), // 10: uas.GetActiveSuppliesResponse
+	(*CreateProductMessage)(nil),      // 0: sms.CreateProductMessage
+	(*UuidResponse)(nil),              // 1: sms.UuidResponse
+	(*UuidRequest)(nil),               // 2: sms.UuidRequest
+	(*SetProductCostRequest)(nil),     // 3: sms.SetProductCostRequest
+	(*SetProductAmountRequest)(nil),   // 4: sms.SetProductAmountRequest
+	(*GetStoreAmountResponse)(nil),    // 5: sms.GetStoreAmountResponse
+	(*SupplyProductModel)(nil),        // 6: sms.SupplyProductModel
+	(*CreateSupplyRequest)(nil),       // 7: sms.CreateSupplyRequest
+	(*UpdateSupplyInfoRequest)(nil),   // 8: sms.UpdateSupplyInfoRequest
+	(*SupplyModel)(nil),               // 9: sms.SupplyModel
+	(*GetActiveSuppliesResponse)(nil), // 10: sms.GetActiveSuppliesResponse
 	(*emptypb.Empty)(nil),             // 11: google.protobuf.Empty
 }
 var file_sms_proto_depIdxs = []int32{
-	6,  // 0: uas.CreateSupplyRequest.products:type_name -> uas.SupplyProductModel
-	9,  // 1: uas.GetActiveSuppliesResponse.supplies:type_name -> uas.SupplyModel
-	0,  // 2: uas.ProductService.CreateProduct:input_type -> uas.CreateProductMessage
-	2,  // 3: uas.ProductService.DeleteProduct:input_type -> uas.UuidRequest
-	3,  // 4: uas.ProductService.SetStoreCost:input_type -> uas.SetProductCostRequest
-	4,  // 5: uas.ProductService.SetStoreAmount:input_type -> uas.SetProductAmountRequest
-	2,  // 6: uas.ProductService.GetStoreAmount:input_type -> uas.UuidRequest
-	7,  // 7: uas.SupplyService.CreateSupply:input_type -> uas.CreateSupplyRequest
-	2,  // 8: uas.SupplyService.DeleteSupply:input_type -> uas.UuidRequest
-	8,  // 9: uas.SupplyService.UpdateSupplyInfo:input_type -> uas.UpdateSupplyInfoRequest
-	11, // 10: uas.SupplyService.GetActiveSupplies:input_type -> google.protobuf.Empty
-	2,  // 11: uas.SupplyService.GetSupplyById:input_type -> uas.UuidRequest
-	1,  // 12: uas.ProductService.CreateProduct:output_type -> uas.UuidResponse
-	1,  // 13: uas.ProductService.DeleteProduct:output_type -> uas.UuidResponse
-	1,  // 14: uas.ProductService.SetStoreCost:output_type -> uas.UuidResponse
-	1,  // 15: uas.ProductService.SetStoreAmount:output_type -> uas.UuidResponse
-	5,  // 16: uas.ProductService.GetStoreAmount:output_type -> uas.GetStoreAmountResponse
-	1,  // 17: uas.SupplyService.CreateSupply:output_type -> uas.UuidResponse
-	1,  // 18: uas.SupplyService.DeleteSupply:output_type -> uas.UuidResponse
-	1,  // 19: uas.SupplyService.UpdateSupplyInfo:output_type -> uas.UuidResponse
-	10, // 20: uas.SupplyService.GetActiveSupplies:output_type -> uas.GetActiveSuppliesResponse
-	9,  // 21: uas.SupplyService.GetSupplyById:output_type -> uas.SupplyModel
+	6,  // 0: sms.CreateSupplyRequest.products:type_name -> sms.SupplyProductModel
+	9,  // 1: sms.GetActiveSuppliesResponse.supplies:type_name -> sms.SupplyModel
+	0,  // 2: sms.ProductService.CreateProduct:input_type -> sms.CreateProductMessage
+	2,  // 3: sms.ProductService.DeleteProduct:input_type -> sms.UuidRequest
+	3,  // 4: sms.ProductService.SetStoreCost:input_type -> sms.SetProductCostRequest
+	4,  // 5: sms.ProductService.SetStoreAmount:input_type -> sms.SetProductAmountRequest
+	2,  // 6: sms.ProductService.GetStoreAmount:input_type -> sms.UuidRequest
+	7,  // 7: sms.SupplyService.CreateSupply:input_type -> sms.CreateSupplyRequest
+	2,  // 8: sms.SupplyService.DeleteSupply:input_type -> sms.UuidRequest
+	8,  // 9: sms.SupplyService.UpdateSupplyInfo:input_type -> sms.UpdateSupplyInfoRequest
+	11, // 10: sms.SupplyService.GetActiveSupplies:input_type -> google.protobuf.Empty
+	2,  // 11: sms.SupplyService.GetSupplyById:input_type -> sms.UuidRequest
+	1,  // 12: sms.ProductService.CreateProduct:output_type -> sms.UuidResponse
+	1,  // 13: sms.ProductService.DeleteProduct:output_type -> sms.UuidResponse
+	1,  // 14: sms.ProductService.SetStoreCost:output_type -> sms.UuidResponse
+	1,  // 15: sms.ProductService.SetStoreAmount:output_type -> sms.UuidResponse
+	5,  // 16: sms.ProductService.GetStoreAmount:output_type -> sms.GetStoreAmountResponse
+	1,  // 17: sms.SupplyService.CreateSupply:output_type -> sms.UuidResponse
+	1,  // 18: sms.SupplyService.DeleteSupply:output_type -> sms.UuidResponse
+	1,  // 19: sms.SupplyService.UpdateSupplyInfo:output_type -> sms.UuidResponse
+	10, // 20: sms.SupplyService.GetActiveSupplies:output_type -> sms.GetActiveSuppliesResponse
+	9,  // 21: sms.SupplyService.GetSupplyById:output_type -> sms.SupplyModel
 	12, // [12:22] is the sub-list for method output_type
 	2,  // [2:12] is the sub-list for method input_type
 	2,  // [2:2] is the sub-list for extension type_name

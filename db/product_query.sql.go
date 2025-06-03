@@ -12,11 +12,11 @@ import (
 )
 
 const createProduct = `-- name: CreateProduct :one
-insert into products (product_code) values ($1) returning uuid
+insert into products (store_cost) values ($1) returning uuid
 `
 
-func (q *Queries) CreateProduct(ctx context.Context, productCode string) (pgtype.UUID, error) {
-	row := q.db.QueryRow(ctx, createProduct, productCode)
+func (q *Queries) CreateProduct(ctx context.Context, storeCost pgtype.Numeric) (pgtype.UUID, error) {
+	row := q.db.QueryRow(ctx, createProduct, storeCost)
 	var uuid pgtype.UUID
 	err := row.Scan(&uuid)
 	return uuid, err

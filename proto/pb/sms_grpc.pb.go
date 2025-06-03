@@ -20,11 +20,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ProductService_CreateProduct_FullMethodName  = "/uas.ProductService/CreateProduct"
-	ProductService_DeleteProduct_FullMethodName  = "/uas.ProductService/DeleteProduct"
-	ProductService_SetStoreCost_FullMethodName   = "/uas.ProductService/SetStoreCost"
-	ProductService_SetStoreAmount_FullMethodName = "/uas.ProductService/SetStoreAmount"
-	ProductService_GetStoreAmount_FullMethodName = "/uas.ProductService/GetStoreAmount"
+	ProductService_CreateProduct_FullMethodName  = "/sms.ProductService/CreateProduct"
+	ProductService_DeleteProduct_FullMethodName  = "/sms.ProductService/DeleteProduct"
+	ProductService_SetStoreCost_FullMethodName   = "/sms.ProductService/SetStoreCost"
+	ProductService_SetStoreAmount_FullMethodName = "/sms.ProductService/SetStoreAmount"
+	ProductService_GetStoreAmount_FullMethodName = "/sms.ProductService/GetStoreAmount"
 )
 
 // ProductServiceClient is the client API for ProductService service.
@@ -245,7 +245,7 @@ func _ProductService_GetStoreAmount_Handler(srv interface{}, ctx context.Context
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ProductService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "uas.ProductService",
+	ServiceName: "sms.ProductService",
 	HandlerType: (*ProductServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -274,11 +274,11 @@ var ProductService_ServiceDesc = grpc.ServiceDesc{
 }
 
 const (
-	SupplyService_CreateSupply_FullMethodName      = "/uas.SupplyService/CreateSupply"
-	SupplyService_DeleteSupply_FullMethodName      = "/uas.SupplyService/DeleteSupply"
-	SupplyService_UpdateSupplyInfo_FullMethodName  = "/uas.SupplyService/UpdateSupplyInfo"
-	SupplyService_GetActiveSupplies_FullMethodName = "/uas.SupplyService/GetActiveSupplies"
-	SupplyService_GetSupplyById_FullMethodName     = "/uas.SupplyService/GetSupplyById"
+	SupplyService_CreateSupply_FullMethodName      = "/sms.SupplyService/CreateSupply"
+	SupplyService_DeleteSupply_FullMethodName      = "/sms.SupplyService/DeleteSupply"
+	SupplyService_UpdateSupplyInfo_FullMethodName  = "/sms.SupplyService/UpdateSupplyInfo"
+	SupplyService_GetActiveSupplies_FullMethodName = "/sms.SupplyService/GetActiveSupplies"
+	SupplyService_GetSupplyById_FullMethodName     = "/sms.SupplyService/GetSupplyById"
 )
 
 // SupplyServiceClient is the client API for SupplyService service.
@@ -499,7 +499,7 @@ func _SupplyService_GetSupplyById_Handler(srv interface{}, ctx context.Context, 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var SupplyService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "uas.SupplyService",
+	ServiceName: "sms.SupplyService",
 	HandlerType: (*SupplyServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
