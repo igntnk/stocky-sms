@@ -39,7 +39,7 @@ func (s supplyRepository) Create(ctx context.Context, supply models.SupplyWithPr
 	conn := s.Getter.DefaultTrOrDB(ctx, s.DB)
 	q := db.New(conn)
 
-	cost, err := Float64ToNumericWithPrecision(supply.Cost, 64)
+	cost, err := Float64ToNumericWithPrecision(supply.Cost)
 	if err != nil {
 		return "", err
 	}
@@ -121,7 +121,7 @@ func (s supplyRepository) UpdateSupplyInfo(ctx context.Context, supply models.Su
 		return "", err
 	}
 
-	num, err := Float64ToNumericWithPrecision(supply.Cost, 64)
+	num, err := Float64ToNumericWithPrecision(supply.Cost)
 	if err != nil {
 		return "", err
 	}

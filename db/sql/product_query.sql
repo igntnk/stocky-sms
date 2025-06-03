@@ -1,5 +1,5 @@
 -- name: CreateProduct :one
-insert into products (product_code) values ($1) returning uuid;
+insert into products (store_cost) values ($1) returning uuid;
 
 -- name: DeleteProduct :one
 delete from products where uuid = $1 returning uuid;

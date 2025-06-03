@@ -59,7 +59,6 @@ func (ns NullSupplyStatus) Value() (driver.Value, error) {
 
 type Product struct {
 	Uuid        pgtype.UUID
-	ProductCode string
 	StoreCost   pgtype.Numeric
 	StoreAmount pgtype.Numeric
 }

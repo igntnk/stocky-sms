@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "google/protobuf/empty.proto";
 
-package uas;
+package sms;
 
 option go_package = "github.com/igntnk/stocky-sms/proto/pb";
 
@@ -15,7 +15,7 @@ service ProductService {
 }
 
 message CreateProductMessage {
-  string productCode = 1;
+  float storeCost = 1;
 }
 
 message UuidResponse {

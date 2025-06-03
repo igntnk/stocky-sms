@@ -12,7 +12,7 @@ import (
 )
 
 type ProductRepository interface {
-	Create(ctx context.Context, productCode string) (string, error)
+	Create(ctx context.Context, storeCost float64) (string, error)
 	Delete(ctx context.Context, uuid string) (string, error)
 	SetStoreCost(ctx context.Context, product models.Product) error
 	SetStoreAmount(ctx context.Context, product models.Product) error
@@ -33,11 +33,16 @@ type productRepository struct {
 	baseRepository
 }
 
-func (p productRepository) Create(ctx context.Context, productCode string) (string, error) {
+func (p productRepository) Create(ctx context.Context, storeCost float64) (string, error) {
 	conn := p.Getter.DefaultTrOrDB(ctx, p.DB)
 	q := db.New(conn)
 
-	res, err := q.CreateProduct(ctx, productCode)
+	costNum, err := Float64ToNumericWithPrecision(storeCost)
+	if err != nil {
+		return "", err
+	}
+
+	res, err := q.CreateProduct(ctx, costNum)
 	if err != nil {
 		return "", err
 	}
@@ -75,7 +80,7 @@ func (p productRepository) SetStoreCost(ctx context.Context, product models.Prod
 		return err
 	}
 
-	num, err := Float64ToNumericWithPrecision(product.StoreCost, 64)
+	num, err := Float64ToNumericWithPrecision(product.StoreCost)
 	if err != nil {
 		return err
 	}
@@ -98,7 +103,7 @@ func (p productRepository) SetStoreAmount(ctx context.Context, product models.Pr
 		return err
 	}
 
-	num, err := Float64ToNumericWithPrecision(product.StoreAmount, 64)
+	num, err := Float64ToNumericWithPrecision(product.StoreAmount)
 	if err != nil {
 		return err
 	}
