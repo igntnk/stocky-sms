@@ -4,8 +4,7 @@ create extension if not exists "uuid-ossp";
 
 create table if not exists products
 (
-    uuid UUID primary key default uuid_generate_v4(),
-    product_code varchar(12) not null,
+    uuid UUID primary key,
     store_cost decimal not null,
     store_amount decimal not null
     );
@@ -19,7 +18,7 @@ create table if not exists supply
     creation_date timestamp not null default now(),
     desired_date timestamp not null,
     status supply_status default 'created' not null,
-    responsible_user varchar(12) not null,
+    responsible_user varchar(24) not null,
     edited boolean default false,
     edited_date timestamp,
     cost decimal not null
