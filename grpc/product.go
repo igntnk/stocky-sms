@@ -2,42 +2,42 @@ package grpc
 
 import (
 	"context"
+	"github.com/igntnk/stocky-2pc-controller/protobufs/sms_pb"
 	"github.com/igntnk/stocky-sms/models"
-	"github.com/igntnk/stocky-sms/proto/pb"
 	"github.com/igntnk/stocky-sms/service"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 )
 
 type productServer struct {
-	pb.UnimplementedProductServiceServer
+	sms_pb.UnimplementedProductServiceServer
 	Logger         zerolog.Logger
 	ProductService service.ProductService
 }
 
 func RegisterProductServer(server *grpc.Server, logger zerolog.Logger, productService service.ProductService) {
-	pb.RegisterProductServiceServer(server, &productServer{Logger: logger, ProductService: productService})
+	sms_pb.RegisterProductServiceServer(server, &productServer{Logger: logger, ProductService: productService})
 }
 
-func (s *productServer) CreateProduct(ctx context.Context, req *pb.CreateProductMessage) (*pb.UuidResponse, error) {
+func (s *productServer) CreateProduct(ctx context.Context, req *sms_pb.CreateProductMessage) (*sms_pb.UuidResponse, error) {
 	res, err := s.ProductService.Create(ctx, float64(req.StoreCost))
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.UuidResponse{Uuid: res}, nil
+	return &sms_pb.UuidResponse{Uuid: res}, nil
 }
 
-func (s *productServer) DeleteProduct(ctx context.Context, req *pb.UuidRequest) (*pb.UuidResponse, error) {
+func (s *productServer) DeleteProduct(ctx context.Context, req *sms_pb.UuidRequest) (*sms_pb.UuidResponse, error) {
 	res, err := s.ProductService.Delete(ctx, req.Uuid)
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.UuidResponse{Uuid: res}, nil
+	return &sms_pb.UuidResponse{Uuid: res}, nil
 }
 
-func (s *productServer) SetStoreCost(ctx context.Context, req *pb.SetProductCostRequest) (*pb.UuidResponse, error) {
+func (s *productServer) SetStoreCost(ctx context.Context, req *sms_pb.SetProductCostRequest) (*sms_pb.UuidResponse, error) {
 	err := s.ProductService.SetStoreCost(ctx, models.Product{
 		Uuid:      req.Uuid,
 		StoreCost: float64(req.StoreCost),
@@ -46,10 +46,10 @@ func (s *productServer) SetStoreCost(ctx context.Context, req *pb.SetProductCost
 		return nil, err
 	}
 
-	return &pb.UuidResponse{Uuid: req.Uuid}, nil
+	return &sms_pb.UuidResponse{Uuid: req.Uuid}, nil
 }
 
-func (s *productServer) SetStoreAmount(ctx context.Context, req *pb.SetProductAmountRequest) (*pb.UuidResponse, error) {
+func (s *productServer) SetStoreAmount(ctx context.Context, req *sms_pb.SetProductAmountRequest) (*sms_pb.UuidResponse, error) {
 	err := s.ProductService.SetStoreAmount(ctx, models.Product{
 		Uuid:        req.Uuid,
 		StoreAmount: float64(req.StoreAmount),
@@ -58,16 +58,60 @@ func (s *productServer) SetStoreAmount(ctx context.Context, req *pb.SetProductAm
 		return nil, err
 	}
 
-	return &pb.UuidResponse{Uuid: req.Uuid}, nil
+	return &sms_pb.UuidResponse{Uuid: req.Uuid}, nil
 }
 
-func (s *productServer) GetStoreAmount(ctx context.Context, req *pb.UuidRequest) (*pb.GetStoreAmountResponse, error) {
+func (s *productServer) GetStoreAmount(ctx context.Context, req *sms_pb.UuidRequest) (*sms_pb.GetStoreAmountResponse, error) {
 	res, err := s.ProductService.GetStoreAmount(ctx, req.Uuid)
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.GetStoreAmountResponse{
+	return &sms_pb.GetStoreAmountResponse{
 		StoreAmount: float32(res),
 	}, nil
+}
+
+func (s *productServer) RemoveCoupleProducts(ctx context.Context, req *sms_pb.RemoveProductsRequest) (*sms_pb.CoupleUuidResponse, error) {
+	products := make([]models.RemoveProductRequest, len(req.Products))
+	for i, product := range req.Products {
+		products[i] = models.RemoveProductRequest{
+			Uuid:   product.Uuid,
+			Amount: float64(product.StoreAmount),
+		}
+	}
+
+	res, err := s.ProductService.RemoveCoupleProducts(ctx, products)
+	if err != nil {
+		return nil, err
+	}
+
+	result := make([]string, len(res))
+	for i, product := range res {
+		result[i] = product
+	}
+
+	return &sms_pb.CoupleUuidResponse{Uuids: result}, nil
+}
+
+func (s *productServer) WriteOnCoupleProducts(ctx context.Context, req *sms_pb.RemoveProductsRequest) (*sms_pb.CoupleUuidResponse, error) {
+	products := make([]models.RemoveProductRequest, len(req.Products))
+	for i, product := range req.Products {
+		products[i] = models.RemoveProductRequest{
+			Uuid:   product.Uuid,
+			Amount: float64(product.StoreAmount),
+		}
+	}
+
+	res, err := s.ProductService.WriteOnCoupleProducts(ctx, products)
+	if err != nil {
+		return nil, err
+	}
+
+	result := make([]string, len(res))
+	for i, product := range res {
+		result[i] = product
+	}
+
+	return &sms_pb.CoupleUuidResponse{Uuids: result}, nil
 }
