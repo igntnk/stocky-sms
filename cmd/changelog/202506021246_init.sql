@@ -6,7 +6,7 @@ create table if not exists products
 (
     uuid UUID primary key,
     store_cost decimal not null,
-    store_amount decimal not null
+    store_amount decimal not null check (store_amount > 0)
     );
 
 create type supply_status as enum ('created', 'in_work','served', 'on_the_road', 'shipped', 'done');

@@ -13,6 +13,8 @@ type ProductService interface {
 	SetStoreCost(ctx context.Context, product models.Product) error
 	SetStoreAmount(ctx context.Context, product models.Product) error
 	GetStoreAmount(ctx context.Context, uuid string) (float64, error)
+	RemoveCoupleProducts(ctx context.Context, products []models.RemoveProductRequest) ([]string, error)
+	WriteOnCoupleProducts(ctx context.Context, products []models.RemoveProductRequest) ([]string, error)
 }
 
 func NewProductService(logger zerolog.Logger, repo repository.ProductRepository) ProductService {
@@ -25,6 +27,14 @@ func NewProductService(logger zerolog.Logger, repo repository.ProductRepository)
 type productService struct {
 	logger zerolog.Logger
 	repo   repository.ProductRepository
+}
+
+func (p productService) RemoveCoupleProducts(ctx context.Context, products []models.RemoveProductRequest) ([]string, error) {
+	return p.repo.RemoveCoupleProducts(ctx, products)
+}
+
+func (p productService) WriteOnCoupleProducts(ctx context.Context, products []models.RemoveProductRequest) ([]string, error) {
+	return p.repo.WriteOnCoupleProducts(ctx, products)
 }
 
 func (p productService) Create(ctx context.Context, storeCost float64) (string, error) {
