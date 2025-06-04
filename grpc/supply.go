@@ -2,8 +2,8 @@ package grpc
 
 import (
 	"context"
+	"github.com/igntnk/stocky-2pc-controller/protobufs/sms_pb"
 	"github.com/igntnk/stocky-sms/models"
-	"github.com/igntnk/stocky-sms/proto/pb"
 	"github.com/igntnk/stocky-sms/service"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
@@ -12,19 +12,19 @@ import (
 )
 
 type supplyServer struct {
-	pb.UnimplementedSupplyServiceServer
+	sms_pb.UnimplementedSupplyServiceServer
 	Logger        zerolog.Logger
 	SupplyService service.SupplyService
 }
 
 func RegisterSupplyServer(grpcServer *grpc.Server, logger zerolog.Logger, supplyService service.SupplyService) {
-	pb.RegisterSupplyServiceServer(grpcServer, &supplyServer{
+	sms_pb.RegisterSupplyServiceServer(grpcServer, &supplyServer{
 		Logger:        logger,
 		SupplyService: supplyService,
 	})
 }
 
-func (s *supplyServer) CreateSupply(ctx context.Context, req *pb.CreateSupplyRequest) (*pb.UuidResponse, error) {
+func (s *supplyServer) CreateSupply(ctx context.Context, req *sms_pb.CreateSupplyRequest) (*sms_pb.UuidResponse, error) {
 	reqProducts := req.GetProducts()
 	resProducts := make([]models.SupplyProduct, len(reqProducts))
 
@@ -54,19 +54,19 @@ func (s *supplyServer) CreateSupply(ctx context.Context, req *pb.CreateSupplyReq
 		return nil, err
 	}
 
-	return &pb.UuidResponse{Uuid: resUuid}, nil
+	return &sms_pb.UuidResponse{Uuid: resUuid}, nil
 }
 
-func (s *supplyServer) DeleteSupply(ctx context.Context, req *pb.UuidRequest) (*pb.UuidResponse, error) {
+func (s *supplyServer) DeleteSupply(ctx context.Context, req *sms_pb.UuidRequest) (*sms_pb.UuidResponse, error) {
 	res, err := s.SupplyService.Delete(ctx, req.GetUuid())
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.UuidResponse{Uuid: res}, nil
+	return &sms_pb.UuidResponse{Uuid: res}, nil
 }
 
-func (s *supplyServer) UpdateSupplyInfo(ctx context.Context, req *pb.UpdateSupplyInfoRequest) (*pb.UuidResponse, error) {
+func (s *supplyServer) UpdateSupplyInfo(ctx context.Context, req *sms_pb.UpdateSupplyInfoRequest) (*sms_pb.UuidResponse, error) {
 	res, err := s.SupplyService.UpdateSupplyInfo(ctx, models.Supply{
 		Uuid:            req.Uuid,
 		Comment:         req.GetComment(),
@@ -81,18 +81,18 @@ func (s *supplyServer) UpdateSupplyInfo(ctx context.Context, req *pb.UpdateSuppl
 		return nil, err
 	}
 
-	return &pb.UuidResponse{Uuid: res}, nil
+	return &sms_pb.UuidResponse{Uuid: res}, nil
 }
 
-func (s *supplyServer) GetActiveSupplies(ctx context.Context, req *emptypb.Empty) (*pb.GetActiveSuppliesResponse, error) {
+func (s *supplyServer) GetActiveSupplies(ctx context.Context, req *emptypb.Empty) (*sms_pb.GetActiveSuppliesResponse, error) {
 	res, err := s.SupplyService.GetActiveSupplies(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	resModels := make([]*pb.SupplyModel, len(res))
+	resModels := make([]*sms_pb.SupplyModel, len(res))
 	for i, item := range res {
-		resModels[i] = &pb.SupplyModel{
+		resModels[i] = &sms_pb.SupplyModel{
 			Uuid:            item.Uuid,
 			Comment:         item.Comment,
 			DesiredDate:     item.DesiredDate,
@@ -102,18 +102,18 @@ func (s *supplyServer) GetActiveSupplies(ctx context.Context, req *emptypb.Empty
 		}
 	}
 
-	return &pb.GetActiveSuppliesResponse{
+	return &sms_pb.GetActiveSuppliesResponse{
 		Supplies: resModels,
 	}, nil
 }
 
-func (s *supplyServer) GetSupplyById(ctx context.Context, req *pb.UuidRequest) (*pb.SupplyModel, error) {
+func (s *supplyServer) GetSupplyById(ctx context.Context, req *sms_pb.UuidRequest) (*sms_pb.SupplyModel, error) {
 	res, err := s.SupplyService.GetSupplyById(ctx, req.GetUuid())
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.SupplyModel{
+	return &sms_pb.SupplyModel{
 		Uuid:            res.Uuid,
 		Comment:         res.Comment,
 		DesiredDate:     res.DesiredDate,
