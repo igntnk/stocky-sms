@@ -7,16 +7,48 @@ import (
 	"github.com/igntnk/stocky-sms/service"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
+	"sync"
 )
 
 type productServer struct {
 	sms_pb.UnimplementedProductServiceServer
-	Logger         zerolog.Logger
-	ProductService service.ProductService
+	Logger           zerolog.Logger
+	ProductService   service.ProductService
+	changeProductsMu sync.Mutex
 }
 
 func RegisterProductServer(server *grpc.Server, logger zerolog.Logger, productService service.ProductService) {
-	sms_pb.RegisterProductServiceServer(server, &productServer{Logger: logger, ProductService: productService})
+	sms_pb.RegisterProductServiceServer(server, &productServer{Logger: logger, ProductService: productService, changeProductsMu: sync.Mutex{}})
+}
+
+func (s *productServer) ChangeCoupleProductAmount(stream grpc.BidiStreamingServer[sms_pb.RemoveProductsRequest, sms_pb.CoupleUuidResponse]) error {
+	// lock resources event
+	_, err := stream.Recv()
+	if err != nil {
+		return err
+	}
+
+	s.changeProductsMu.Lock()
+	defer s.changeProductsMu.Unlock()
+
+	ctx := stream.Context()
+
+	changeProductRequest, err := stream.Recv()
+	if err != nil {
+		return err
+	}
+
+	res, err := s.RemoveCoupleProducts(ctx, changeProductRequest)
+	if err != nil {
+		return err
+	}
+
+	err = stream.Send(res)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *productServer) CreateProduct(ctx context.Context, req *sms_pb.CreateProductMessage) (*sms_pb.UuidResponse, error) {
